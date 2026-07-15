@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Booking Slot Availability</title>
+<style>
+  :root{
+    --navy:#12283d; --steel:#5b7186; --line:#dfe6ec; --page:#f4f7f9; --card:#ffffff;
+    --amber:#b97517; --amber-bg:#faeeda; --amber-dk:#633806;
+    --teal:#0f6e56;  --teal-bg:#e1f5ee;  --teal-dk:#085041;
+    --green:#3b6d11; --green-bg:#eaf3de;
+    --red:#a32d2d;   --red-bg:#fcebeb;
+    --purple:#534ab7; --purple-bg:#eeedfe; --purple-dk:#26215c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",Arial,sans-serif;background:var(--page);color:var(--navy);padding:16px}
+  .wrap{max-width:1000px;margin:0 auto}
+  header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  h1{font-size:22px;font-weight:600}
+  .sub{font-size:12px;color:var(--steel);margin-top:2px}
+  .banner{font-size:14px;font-weight:600;padding:8px 16px;border-radius:8px}
+  .banner.ok{background:var(--green-bg);color:var(--green)}
+  .banner.full{background:var(--red-bg);color:var(--red)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+  .kpi .lbl{font-size:12px;color:var(--steel)}
+  .kpi .val{font-size:26px;font-weight:600;margin-top:2px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  @media(max-width:700px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .card h2{font-size:15px;font-weight:600;margin-bottom:10px}
+  .stackbox{position:relative;margin:0 auto;max-width:340px}
+  .tier{position:relative;border-radius:6px;height:74px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background-size:cover;background-position:center}
+  .tier.h2t{background-color:var(--amber-bg);border:2px solid var(--amber)}
+  .tier.gt{background-color:var(--teal-bg);border:2px solid var(--teal)}
+  .tier .tag{font-size:12px;font-weight:600}
+  .tier.h2t .tag{color:var(--amber-dk)}
+  .tier.gt .tag{color:var(--teal-dk)}
+  .tier .tag small{display:block;font-weight:400;font-size:11px;opacity:.85}
+  .avail{text-align:right}
+  .avail .n{font-size:30px;font-weight:700;line-height:1}
+  .tier.h2t .avail{color:var(--amber-dk)}
+  .tier.gt .avail{color:var(--teal-dk)}
+  .avail .a{font-size:10px;letter-spacing:.4px;text-transform:uppercase}
+  .w20 .tier{width:62%;margin-left:auto;margin-right:auto}
+  .w40 .tier{width:100%}
+  .note{font-size:11px;color:var(--steel);text-align:center;margin-top:6px}
+  .special .tier{background-color:var(--purple-bg);border:2px solid var(--purple)}
+  .special .tag,.special .avail{color:var(--purple-dk)}
+  footer{font-size:11px;color:var(--steel);text-align:center;margin-top:16px}
+  .err{background:var(--red-bg);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;display:none;margin-bottom:12px}
+  img.cimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.28;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1 id="title">Delivery Booking Slot Availability</h1>
+      <div class="sub" id="updated">Loading latest data…</div>
+    </div>
+    <div class="banner ok" id="banner">—</div>
+  </header>
+
+  <div class="err" id="err"></div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Open ground slots (shared pool)</div><div class="val" id="kFree">–</div></div>
+    <div class="kpi"><div class="lbl">Ground capacity</div><div class="val" id="kCap">–</div></div>
+    <div class="kpi"><div class="lbl">Special container slots available</div><div class="val" id="kSpec">–</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card w20">
+      <h2>20 ft container — bookings you can still place</h2>
+      <div class="stackbox">
+        <div class="tier h2t" id="t20h">
+          <img class="cimg" id="img20a" alt="" hidden>
+          <span class="tag">DLV2H<small>delivery from height (top tier)</small></span>
+          <span class="avail"><span class="n" id="a2h20">–</span><span class="a">available</span></span>
+        </div>
+        <div class="tier gt" id="t20g">
+          <img class="cimg" id="img20b" alt="" hidden>
+          <span class="tag">DLVG<small>delivery from ground</small></span>
+          <span class="avail"><span class="n" id="ag20">–</span><span class="a">available</span></span>
+        </div>
+      </div>
+      <div class="note">Top box = height delivery · bottom box = ground delivery</div>
+    </div>
+
+    <div class="card w40">
+      <h2>40 ft container — bookings you can still place</h2>
+      <div class="stackbox">
+        <div class="tier h2t">
+          <img class="cimg" id="img40a" alt="" hidden>
+          <span class="tag">DLV2H<small>delivery from height (top tier)</small></span>
+          <span class="avail"><span class="n" id="a2h40">–</span><span class="a">available</span></span>
+        </div>
+        <div class="tier gt">
+          <img class="cimg" id="img40b" alt="" hidden>
+          <span class="tag">DLVG<small>delivery from ground</small></span>
+          <span class="avail"><span class="n" id="ag40">–</span><span class="a">available</span></span>
+        </div>
+      </div>
+      <div class="note">Top box = height delivery · bottom box = ground delivery</div>
+    </div>
+  </div>
+
+  <div class="card special">
+    <h2>Special containers (reefer) — ground delivery only</h2>
+    <div class="stackbox" style="max-width:420px">
+      <div class="tier">
+        <span class="tag">SPECIAL<small>ground delivery only</small></span>
+        <span class="avail"><span class="n" id="aSpec">–</span><span class="a">available</span></span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Slots are first come, first served — availability is shared across sizes and delivery types and may change at any time.
+    Figures update hourly. <span id="refnote"></span>
+  </footer>
+</div>
+
+<script>
+/* ================= CONFIGURATION — edit these lines only ================= */
+const CONFIG = {
+  APPS_SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE", // ends with /exec
+  TERMINAL_NAME:   "Your Terminal Name",
+  REFRESH_SECONDS: 60,
+  IMAGE_20FT: "",   // optional: e.g. "images/container20.jpg"
+  IMAGE_40FT: ""    // optional: e.g. "images/container40.jpg"
+};
+/* ======================================================================== */
+
+document.getElementById('title').textContent = CONFIG.TERMINAL_NAME + " — Delivery Booking Slot Availability";
+document.getElementById('refnote').textContent = "Auto-refreshes every " + CONFIG.REFRESH_SECONDS + " s.";
+if (CONFIG.IMAGE_20FT){ ['img20a','img20b'].forEach(i=>{const el=document.getElementById(i);el.src=CONFIG.IMAGE_20FT;el.hidden=false;}); }
+if (CONFIG.IMAGE_40FT){ ['img40a','img40b'].forEach(i=>{const el=document.getElementById(i);el.src=CONFIG.IMAGE_40FT;el.hidden=false;}); }
+
+function n(v){ return Math.max(0, parseInt(v,10) || 0); }
+
+function compute(d){
+  // d: {cap, specCap, t20, t40, g20, g40, spec}
+  const s20 = Math.max(d.t20, d.g20);          // ground slots used by 20ft stacks
+  const s40 = Math.max(d.t40, d.g40);          // ground slots used by 40ft stacks
+  const used = s20 + s40;
+  const free = d.cap - used;                   // shared open slots (can be negative)
+  const f = Math.max(0, free);
+  return {
+    used, free, f,
+    a2h20: free < 0 ? 0 : Math.max(0, d.g20 - d.t20) + f,  // zero-cost caps + new stacks
+    a2h40: free < 0 ? 0 : Math.max(0, d.g40 - d.t40) + f,
+    ag20:  free < 0 ? 0 : Math.max(0, d.t20 - d.g20) + f,  // replace empties + new stacks
+    ag40:  free < 0 ? 0 : Math.max(0, d.t40 - d.g40) + f,
+    aSpec: Math.max(0, d.specCap - d.spec)
+  };
+}
+
+function render(row){
+  const d = {
+    cap: n(row.capacity), specCap: n(row.specialCapacity),
+    t20: n(row.t20), t40: n(row.t40), g20: n(row.g20), g40: n(row.g40),
+    spec: n(row.specialBooked)
+  };
+  const r = compute(d);
+  const set = (id,v)=>document.getElementById(id).textContent = v;
+  set('kFree', r.f); set('kCap', d.cap); set('kSpec', r.aSpec);
+  set('a2h20', r.a2h20); set('a2h40', r.a2h40);
+  set('ag20', r.ag20);   set('ag40', r.ag40);
+  set('aSpec', r.aSpec);
+  const b = document.getElementById('banner');
+  if (r.free < 0 || r.f === 0){
+    b.className = 'banner full';
+    b.textContent = r.free < 0 ? 'Fully booked — new bookings on hold' : 'Yard full — only zero-cost bookings accepted';
+    if (r.free < 0){ set('kFree', 0); }
+  } else {
+    b.className = 'banner ok';
+    b.textContent = 'Accepting bookings — ' + r.f + ' open slot' + (r.f===1?'':'s');
+  }
+  const ts = row.timestamp ? new Date(row.timestamp) : null;
+  document.getElementById('updated').textContent =
+    ts ? 'Last updated ' + ts.toLocaleString() : 'Last updated —';
+}
+
+async function load(){
+  const err = document.getElementById('err');
+  try{
+    const res = await fetch(CONFIG.APPS_SCRIPT_URL + '?action=data&cachebust=' + Date.now());
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    if (j.error) throw new Error(j.error);
+    err.style.display = 'none';
+    render(j);
+  }catch(e){
+    err.textContent = 'Could not load latest data (' + e.message + '). Showing last known values. Check APPS_SCRIPT_URL in index.html.';
+    err.style.display = 'block';
+  }
+}
+
+load();
+setInterval(load, CONFIG.REFRESH_SECONDS * 1000);
+</script>
+</body>
+</html>
