@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-07-16T04:12:07.081Z",
+  "timestamp": "2026-07-16T05:27:00.566Z",
   "capacity": 80,
   "specialCapacity": 10,
-  "t20": 50,
-  "t40": 12,
-  "g20": 25,
-  "g40": 14,
-  "specialBooked": 9,
-  "updatedBy": "zannatulmukarroma@gmail.com"
+  "t20": 0,
+  "t40": 0,
+  "g20": 80,
+  "g40": 0,
+  "specialBooked": 1,
+  "updatedBy": "ahsanrsgt2024@gmail.com"
 }
