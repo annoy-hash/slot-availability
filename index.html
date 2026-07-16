@@ -127,7 +127,8 @@
 <script>
 /* ================= CONFIGURATION — edit these lines only ================= */
 const CONFIG = {
-  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzV2Xbtd3eY9T9aERW4cpX_ukho9ZkvT-ixgQYKwqzhvTyWcpLOAfXxrdvgykY_yUGENQ/exec", // ends with /exec
+  // Change this line in your CONFIG block:
+  DATA_URL: "https://annoy-hash.github.io/slot-availability/data.json",
   TERMINAL_NAME:   "RSGT Bangladesh",
   REFRESH_SECONDS: 60,
   IMAGE_20FT: "",   // optional: e.g. "images/container20.jpg"
@@ -188,7 +189,7 @@ function render(row){
 async function load(){
   const err = document.getElementById('err');
   try{
-    const res = await fetch(CONFIG.APPS_SCRIPT_URL + '?action=data&cachebust=' + Date.now());
+    const res = await fetch(CONFIG.DATA_URL + '?cachebust=' + Date.now());
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const j = await res.json();
     if (j.error) throw new Error(j.error);
