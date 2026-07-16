@@ -165,6 +165,11 @@
   
   /* Out of slots alert class */
   .tier.out-of-slots { background-color: var(--red-bg) !important; border: 2px solid var(--red-border) !important; }
+  /* Green background class when slots are available */
+  .tier.slots-available { 
+  background-color: #16a34a !important; 
+  border-color: #15803d !important; 
+}
   
   .tier .tag { font-size: 15px; font-weight: 700; color: #ffffff; }
   
@@ -246,7 +251,7 @@
         <h2>Special (Reefer)</h2>
         <div class="stackbox">
           <div class="tier" id="tSpec">
-            <span class="tag">Only Special (Reefer)</span>
+            <span class="tag">Special (Reefer)</span>
             <span class="avail"><span class="n" id="aSpec">–</span><span class="a">available</span></span>
           </div>
         </div>
@@ -306,12 +311,14 @@ function render(row){
   set('ag20', r.ag20);   set('ag40', r.ag40);
   set('aSpec', r.aSpec);
   
-  // TOGGLE ALERTS (Red when empty, dynamic default class when slots available)
+// TOGGLE ALERTS (Red when empty, Green when slots are available)
   const toggleAlert = (elId, count) => {
     const el = document.getElementById(elId);
     if (count <= 0) {
       el.classList.add('out-of-slots');
+      el.classList.remove('slots-available');
     } else {
+      el.classList.add('slots-available');
       el.classList.remove('out-of-slots');
     }
   };
