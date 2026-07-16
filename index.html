@@ -12,6 +12,18 @@
     --line: #dfe6ec; 
     --page: #f4f7f9; 
     --card: #ffffff;
+    
+    /* Default Tier Colors */
+    --h2t-bg: #f59e0b;
+    --h2t-border: #b45309;
+    --gt-bg: #0d9488;
+    --gt-border: #115e59;
+    --spec-bg: #6366f1;
+    --spec-border: #4338ca;
+    
+    /* Global Red Alert Theme */
+    --red-bg: #dc2626;
+    --red-border: #991b1b;
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -86,7 +98,7 @@
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 14px 20px;
+    padding: 18px 20px;
     text-align: center;
     margin-bottom: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -95,18 +107,11 @@
   .status-line {
     font-size: 22px;
     font-weight: 800;
-    margin: 2px 0;
+    margin: 4px 0;
     letter-spacing: 0.3px;
   }
   .status-line.green { color: #16a34a; }
   .status-line.red { color: #dc2626; }
-  
-  .status-slots-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--steel);
-    margin-top: 6px;
-  }
 
   .banner-container { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
   .sub { font-size: 12px; color: var(--steel); }
@@ -151,12 +156,15 @@
   .wspecial { width: 24%; }
 
   .stackbox { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: center; }
-  .tier { border-radius: 8px; height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+  .tier { border-radius: 8px; height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; transition: background-color 0.3s, border-color 0.3s; }
   
   /* COMPACT COLOR MAP ASSIGNMENTS */
-  .tier.h2t { background-color: #f59e0b; border: 2px solid #b45309; }
-  .tier.gt { background-color: #0d9488; border: 2px solid #115e59; }
-  .wspecial .tier { background-color: #6366f1; border: 2px solid #4338ca; height: 158px; }
+  .tier.h2t { background-color: var(--h2t-bg); border: 2px solid var(--h2t-border); }
+  .tier.gt { background-color: var(--gt-bg); border: 2px solid var(--gt-border); }
+  .wspecial .tier { background-color: var(--spec-bg); border: 2px solid var(--spec-border); height: 158px; }
+  
+  /* Out of slots alert class */
+  .tier.out-of-slots { background-color: var(--red-bg) !important; border: 2px solid var(--red-border) !important; }
   
   .tier .tag { font-size: 15px; font-weight: 700; color: #ffffff; }
   
@@ -189,11 +197,8 @@
     
     <!-- CENTRAL SPLIT BOOKING & SYSTEM AVAILABILITY DISPLAY CARD -->
     <div class="status-card">
-      <div id="status-general" class="status-line green">Dry Container: Accepting CV Booking</div>
+      <div id="status-general" class="status-line green">Dry Container: Accepting CV (2High and Ground) Booking</div>
       <div id="status-special" class="status-line green">Special Reefer: Accepting Bookings</div>
-      <div class="status-slots-label">
-        Total Available Slots: <span id="total-available-count">—</span>
-      </div>
     </div>
     
     <div class="banner-container">
@@ -225,11 +230,11 @@
       <div class="card w40">
         <h2>40 ft container</h2>
         <div class="stackbox">
-          <div class="tier h2t">
+          <div class="tier h2t" id="t40h">
             <span class="tag">2High</span>
             <span class="avail"><span class="n" id="a2h40">–</span><span class="a">available</span></span>
           </div>
-          <div class="tier gt">
+          <div class="tier gt" id="t40g">
             <span class="tag">DLVG</span>
             <span class="avail"><span class="n" id="ag40">–</span><span class="a">available</span></span>
           </div>
@@ -240,7 +245,7 @@
       <div class="card wspecial">
         <h2>Special (Reefer)</h2>
         <div class="stackbox">
-          <div class="tier">
+          <div class="tier" id="tSpec">
             <span class="tag">Only Special (Reefer)</span>
             <span class="avail"><span class="n" id="aSpec">–</span><span class="a">available</span></span>
           </div>
@@ -271,18 +276,19 @@ setInterval(updateClock, 1000);
 
 function n(v){ return Math.max(0, parseInt(v,10) || 0); }
 
+// SPLIT CAPACITY CALCULATION LOGIC
 function compute(d){
-  const s20 = Math.max(d.t20, d.g20);
-  const s40 = Math.max(d.t40, d.g40);
-  const used = s20 + s40;
-  const free = d.cap - used;
-  const f = Math.max(0, free);
+  const groundBooked = d.g20 + d.g40;
+  const heightBooked = d.t20 + d.t40;
+  
+  const remainingGround = Math.max(0, d.cap - groundBooked);
+  const remainingHeight = Math.max(0, d.cap - heightBooked);
+  
   return {
-    used, free, f,
-    a2h20: free < 0 ? 0 : Math.max(0, d.g20 - d.t20) + f,
-    a2h40: free < 0 ? 0 : Math.max(0, d.g40 - d.t40) + f,
-    ag20:  free < 0 ? 0 : Math.max(0, d.t20 - d.g20) + f,
-    ag40:  free < 0 ? 0 : Math.max(0, d.t40 - d.g40) + f,
+    a2h20: Math.max(0, remainingHeight - d.t20),
+    a2h40: Math.max(0, remainingHeight - d.t40),
+    ag20:  Math.max(0, remainingGround - d.g20),
+    ag40:  Math.max(0, remainingGround - d.g40),
     aSpec: Math.max(0, d.specCap - d.spec)
   };
 }
@@ -300,16 +306,39 @@ function render(row){
   set('ag20', r.ag20);   set('ag40', r.ag40);
   set('aSpec', r.aSpec);
   
-  set('total-available-count', r.f + r.aSpec);
+  // TOGGLE ALERTS (Red when empty, dynamic default class when slots available)
+  const toggleAlert = (elId, count) => {
+    const el = document.getElementById(elId);
+    if (count <= 0) {
+      el.classList.add('out-of-slots');
+    } else {
+      el.classList.remove('out-of-slots');
+    }
+  };
   
-  // DRY CONTAINER EVALUATION LOGIC
+  toggleAlert('t20h', r.a2h20);
+  toggleAlert('t20g', r.ag20);
+  toggleAlert('t40h', r.a2h40);
+  toggleAlert('t40g', r.ag40);
+  toggleAlert('tSpec', r.aSpec);
+  
+  // DRY CONTAINER DYNAMIC BANNER LOGIC
   const generalLabel = document.getElementById('status-general');
-  if (d.cap <= 80 && (r.free < 0 || r.f === 0)) {
+  const heightHasSlots = (r.a2h20 + r.a2h40) > 0;
+  const groundHasSlots = (r.ag20 + r.ag40) > 0;
+  
+  if (heightHasSlots && groundHasSlots) {
+    generalLabel.className = "status-line green";
+    generalLabel.textContent = "Dry Container: Accepting CV (2High and Ground) Booking";
+  } else if (heightHasSlots && !groundHasSlots) {
+    generalLabel.className = "status-line green";
+    generalLabel.textContent = "Dry Container: Accepting CV (2High) Booking";
+  } else if (!heightHasSlots && groundHasSlots) {
+    generalLabel.className = "status-line green";
+    generalLabel.textContent = "Dry Container: Accepting CV (Ground) Booking";
+  } else {
     generalLabel.className = "status-line red";
     generalLabel.textContent = "Dry Container: CV Booking Stopped";
-  } else {
-    generalLabel.className = "status-line green";
-    generalLabel.textContent = "Dry Container: Accepting CV Booking";
   }
   
   // SPECIAL REEFER CONTAINER EVALUATION LOGIC
