@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-07-29T09:08:01.825Z",
+  "timestamp": "2026-07-29T09:13:18.563Z",
   "capacity": 80,
   "specialCapacity": 10,
   "t20": 40,
   "t40": 29,
-  "g20": 60,
+  "g20": 40,
   "g40": 16,
   "specialBooked": 10,
   "updatedBy": "anonymous.user.62891@gmail.com"
