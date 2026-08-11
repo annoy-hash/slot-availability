@@ -1,7 +1,7 @@
 {
   "timestamp": null,
   "capacity": 80,
-  "specialCapacity": 0,
+  "specialCapacity": 10,
   "t20": 0,
   "t40": 0,
   "g20": 0,
