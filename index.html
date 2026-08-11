@@ -167,9 +167,9 @@
   .tier.out-of-slots { background-color: var(--red-bg) !important; border: 2px solid var(--red-border) !important; }
   /* Green background class when slots are available */
   .tier.slots-available { 
-  background-color: #16a34a !important; 
-  border-color: #15803d !important; 
-}
+    background-color: #16a34a !important; 
+    border-color: #15803d !important; 
+  }
   
   .tier .tag { font-size: 15px; font-weight: 700; color: #ffffff; }
   
@@ -281,20 +281,36 @@ setInterval(updateClock, 1000);
 
 function n(v){ return Math.max(0, parseInt(v,10) || 0); }
 
-// SPLIT CAPACITY CALCULATION LOGIC
-function compute(d){
-  const groundBooked = d.g20 + d.g40;
-  const heightBooked = d.t20 + d.t40;
-  
-  const remainingGround = Math.max(0, d.cap - groundBooked);
-  const remainingHeight = Math.max(0, d.cap - heightBooked);
-  
+// OPERATIONAL TERMINAL STACKING LOGIC
+function compute(d) {
+  const cap = d.cap;
+  const specCap = d.specCap;
+  const t20 = d.t20;
+  const t40 = d.t40;
+  const g20 = d.g20;
+  const g40 = d.g40;
+  const spec = d.spec;
+
+  // 1. Effective Ground Slots Consumed (accounting for forced empty ground blocks)
+  const slots20 = Math.max(t20, g20);
+  const slots40 = Math.max(t40, g40);
+  const totalSlotsUsed = slots20 + slots40;
+
+  // 2. Unallocated / Free Ground Capacity
+  const freeSlots = Math.max(0, cap - totalSlotsUsed);
+
+  // 3. Available Slots (Free Capacity + Zero-Cost Pairings)
+  const avail20_2H = freeSlots + Math.max(0, g20 - t20);
+  const avail20_Gr = freeSlots + Math.max(0, t20 - g20);
+  const avail40_2H = freeSlots + Math.max(0, g40 - t40);
+  const avail40_Gr = freeSlots + Math.max(0, t40 - g40);
+
   return {
-    a2h20: Math.max(0, remainingHeight - d.t20),
-    a2h40: Math.max(0, remainingHeight - d.t40),
-    ag20:  Math.max(0, remainingGround - d.g20),
-    ag40:  Math.max(0, remainingGround - d.g40),
-    aSpec: Math.max(0, d.specCap - d.spec)
+    a2h20: avail20_2H,
+    ag20:  avail20_Gr,
+    a2h40: avail40_2H,
+    ag40:  avail40_Gr,
+    aSpec: Math.max(0, specCap - spec)
   };
 }
 
@@ -311,7 +327,7 @@ function render(row){
   set('ag20', r.ag20);   set('ag40', r.ag40);
   set('aSpec', r.aSpec);
   
-// TOGGLE ALERTS (Red when empty, Green when slots are available)
+  // TOGGLE ALERTS (Red when empty, Green when slots are available)
   const toggleAlert = (elId, count) => {
     const el = document.getElementById(elId);
     if (count <= 0) {
