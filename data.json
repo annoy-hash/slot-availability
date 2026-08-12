@@ -2,9 +2,9 @@
   "timestamp": null,
   "capacity": 80,
   "specialCapacity": 10,
-  "t20": 0,
-  "t40": 0,
-  "g20": 2,
+  "t20": 1,
+  "t40": 5,
+  "g20": 5,
   "g40": 1,
   "specialBooked": 0,
   "updatedBy": "Power Automate"
