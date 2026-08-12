@@ -18,8 +18,6 @@
     --h2t-border: #b45309;
     --gt-bg: #0d9488;
     --gt-border: #115e59;
-    --spec-bg: #6366f1;
-    --spec-border: #4338ca;
     
     /* Global Red Alert Theme */
     --red-bg: #dc2626;
@@ -27,44 +25,57 @@
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100vh; overflow: hidden; }
-  body { font-family: "Times New Roman", Times, serif; background: var(--page); color: var(--navy); display: flex; flex-direction: column; }
+  
+  html, body { 
+    min-height: 100vh; 
+    overflow-x: hidden; 
+    overflow-y: auto; 
+  }
+  body { 
+    font-family: "Times New Roman", Times, serif; 
+    background: var(--page); 
+    color: var(--navy); 
+    display: flex; 
+    flex-direction: column; 
+  }
   
   /* HEADER ARCHITECTURE */
   header { 
     background: var(--navy); 
     color: #ffffff; 
-    padding: 8px 24px; 
+    padding: 12px 16px; 
     display: flex; 
+    flex-wrap: wrap;
+    gap: 12px;
     justify-content: space-between; 
     align-items: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     flex-shrink: 0;
   }
-  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
   .logo { 
-    height: 48px; 
+    height: 40px; 
     width: auto;
     background: #ffffff; 
     padding: 4px 8px; 
     border-radius: 4px; 
     display: block;
   }
-  h1 { font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; }
+  h1 { font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; }
   
-  .header-controls { display: flex; align-items: center; gap: 20px; }
+  .header-controls { display: flex; align-items: center; gap: 12px; }
   .clock-box { text-align: right; line-height: 1.2; }
-  #live-clock { font-size: 16px; font-weight: 700; color: var(--light-blue); }
-  .location-lbl { font-size: 11px; color: #ffffff; opacity: 0.8; }
+  #live-clock { font-size: 14px; font-weight: 700; color: var(--light-blue); }
+  .location-lbl { font-size: 10px; color: #ffffff; opacity: 0.8; }
   
   .lang-select { 
     background: transparent; 
     color: #ffffff; 
     border: 1px solid rgba(255,255,255,0.4); 
-    padding: 6px 12px; 
+    padding: 6px 8px; 
     border-radius: 4px; 
     font-family: inherit; 
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
   }
   .lang-select option { color: var(--navy); }
@@ -73,39 +84,37 @@
     background: var(--light-blue); 
     color: #ffffff; 
     text-decoration: none; 
-    padding: 8px 20px; 
+    padding: 6px 14px; 
     border-radius: 6px; 
     font-weight: 700; 
-    font-size: 14px;
+    font-size: 12px;
     transition: background 0.2s;
   }
   .admin-btn:hover { background: #0082b3; }
 
-  /* COMPACT MAIN CONTENT CONTAINER WRAPPER */
+  /* MAIN CONTENT CONTAINER WRAPPER */
   .wrap { 
-    max-width: 1400px; 
+    max-width: 1200px; 
     width: 100%; 
     margin: 0 auto; 
-    padding: 12px 16px; 
+    padding: 16px; 
     display: flex; 
     flex-direction: column; 
     flex: 1; 
-    min-height: 0; 
   }
   
-  /* HIGH PRIORITY DOUBLE STATUS OVERVIEW CARD */
+  /* STATUS OVERVIEW CARD */
   .status-card {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 16px 20px;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    flex-shrink: 0;
   }
   .status-line {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 800;
     margin: 4px 0;
     letter-spacing: 0.3px;
@@ -113,65 +122,110 @@
   .status-line.green { color: #16a34a; }
   .status-line.red { color: #dc2626; }
 
-  .banner-container { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+  .banner-container { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
   .sub { font-size: 12px; color: var(--steel); }
-  .err { background: #fee2e2; color: #dc2626; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; display: none; margin-bottom: 10px; border: 1px solid #dc2626; flex-shrink: 0; }
+  .err { background: #fee2e2; color: #dc2626; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; display: none; margin-bottom: 10px; border: 1px solid #dc2626; }
 
-  /* BREAKDOWN PLACEHOLDER LABEL */
+  /* BREAKDOWN HEADER LABEL */
   .breakdown-header {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: var(--navy);
     border-bottom: 2px solid var(--navy);
     padding-bottom: 4px;
-    margin-bottom: 12px;
-    flex-shrink: 0;
+    margin-bottom: 16px;
   }
 
-  /* SINGLE SCREEN 3-COLUMN INLINE CONTAINER GRID */
+  /* RESPONSIVE GRID WITH LEFT-ALIGNED CARDS */
   .grid { 
     display: flex; 
+    flex-direction: column;
+    align-items: flex-start;
     gap: 16px; 
-    flex: 1; 
-    min-height: 0; 
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
   
   .card { 
     background: var(--card); 
     border: 1px solid var(--line); 
     border-radius: 12px; 
-    padding: 14px; 
+    padding: 16px; 
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
+    transition: all 0.2s ease;
   }
-  .card h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; border-left: 4px solid var(--steel); padding-left: 8px; text-transform: capitalize; }
-  
-  /* PROPORTIONAL GRID WIDTH ALLOCATIONS */
-  .w20 { width: 28%; }
-  .w40 { width: 48%; }
-  .wspecial { width: 24%; }
 
-  .stackbox { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: center; }
-  .tier { border-radius: 8px; height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; transition: background-color 0.3s, border-color 0.3s; }
+  /* 20 FT SPECIFIC VISUAL SCALING */
+  .card.c20ft { 
+    width: 80%; 
+  }
+  .card.c20ft .tier {
+    height: 60px; 
+  }
+  .card.c20ft .avail .n {
+    font-size: 26px; 
+  }
+
+  /* 40 FT SPECIFIC VISUAL SCALING */
+  .card.c40ft { 
+    width: 100%; 
+  }
+  .card.c40ft .tier {
+    height: 75px; 
+  }
+
+  /* DESKTOP SIDE-BY-SIDE PROPORTIONS (35% vs 65%) */
+  @media (min-width: 768px) {
+    header { padding: 8px 24px; }
+    h1 { font-size: 22px; }
+    #live-clock { font-size: 16px; }
+    .status-line { font-size: 22px; }
+    .grid { 
+      flex-direction: row; 
+      align-items: stretch; 
+    }
+    
+    .card.c20ft { 
+      flex: 35; 
+      width: auto;
+    }
+    .card.c40ft { 
+      flex: 65; 
+      width: auto;
+    }
+    .card.c20ft .tier,
+    .card.c40ft .tier {
+      height: 75px;
+    }
+  }
+
+  .card h2 { 
+    font-size: 16px; 
+    font-weight: 600; 
+    margin-bottom: 12px; 
+    border-left: 4px solid var(--steel); 
+    padding-left: 8px; 
+    text-transform: capitalize; 
+  }
+
+  .stackbox { display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center; }
+  .tier { border-radius: 8px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; transition: background-color 0.3s, border-color 0.3s; }
   
-  /* COMPACT COLOR MAP ASSIGNMENTS */
+  /* COLOR MAP ASSIGNMENTS */
   .tier.h2t { background-color: var(--h2t-bg); border: 2px solid var(--h2t-border); }
   .tier.gt { background-color: var(--gt-bg); border: 2px solid var(--gt-border); }
-  .wspecial .tier { background-color: var(--spec-bg); border: 2px solid var(--spec-border); height: 158px; }
   
-  /* Out of slots alert class */
+  /* Alert classes */
   .tier.out-of-slots { background-color: var(--red-bg) !important; border: 2px solid var(--red-border) !important; }
-  /* Green background class when slots are available */
   .tier.slots-available { 
     background-color: #16a34a !important; 
     border-color: #15803d !important; 
   }
   
-  .tier .tag { font-size: 15px; font-weight: 700; color: #ffffff; }
+  .tier .tag { font-size: 16px; font-weight: 700; color: #ffffff; }
   
   .avail { text-align: left; }
   .avail .n { font-size: 32px; font-weight: 800; line-height: 1; color: #ffffff; }
@@ -189,21 +243,22 @@
     <div class="header-controls">
       <div class="clock-box">
         <div id="live-clock">00:00:00 AM</div>
-        <div class="location-lbl">Chattogram</div>
+        <div class="location-lbl" id="location-lbl">Chattogram</div>
       </div>
-      <select class="lang-select">
-        <option>English</option>
+      <!-- LANGUAGE SELECTION DROPDOWN -->
+      <select class="lang-select" id="lang-select" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="bn">বাংলা (Bangla)</option>
       </select>
-      <a href="https://script.google.com/macros/s/AKfycbyq75CcvlZxjnIJ5Ydj_0orVgXRyKIoJ--9eA7mooq0wpz_NYe2-DzeoQFdbnhJ8Gij/exec" target="_blank" class="admin-btn">Admin</a>
+      <a href="https://script.google.com/macros/s/AKfycbyq75CcvlZxjnIJ5Ydj_0orVgXRyKIoJ--9eA7mooq0wpz_NYe2-DzeoQFdbnhJ8Gij/exec" target="_blank" class="admin-btn" id="admin-btn">Admin</a>
     </div>
   </header>
 
   <div class="wrap">
     
-    <!-- CENTRAL SPLIT BOOKING & SYSTEM AVAILABILITY DISPLAY CARD -->
+    <!-- SYSTEM AVAILABILITY DISPLAY CARD -->
     <div class="status-card">
       <div id="status-general" class="status-line green">Dry Container: Accepting CV (2High and Ground) Booking</div>
-      <div id="status-special" class="status-line green">Special Reefer: Accepting Bookings</div>
     </div>
     
     <div class="banner-container">
@@ -213,46 +268,35 @@
     <div class="err" id="err"></div>
 
     <!-- VISUAL BREAKDOWN SECTION LABEL -->
-    <div class="breakdown-header">Available Slots Breakdown</div>
+    <div class="breakdown-header" id="breakdown-header">Available Slots Breakdown</div>
 
     <div class="grid">
       <!-- 20 FT CONTAINER -->
-      <div class="card w20">
-        <h2>20 ft container</h2>
+      <div class="card c20ft">
+        <h2 id="title-20ft">20 ft container</h2>
         <div class="stackbox">
           <div class="tier h2t" id="t20h">
-            <span class="tag">2High</span>
-            <span class="avail"><span class="n" id="a2h20">–</span><span class="a">available</span></span>
+            <span class="tag" id="tag-20h">2High</span>
+            <span class="avail"><span class="n" id="a2h20">–</span><span class="a lbl-avail">available</span></span>
           </div>
           <div class="tier gt" id="t20g">
-            <span class="tag">Ground</span>
-            <span class="avail"><span class="n" id="ag20">–</span><span class="a">available</span></span>
+            <span class="tag" id="tag-20g">Ground</span>
+            <span class="avail"><span class="n" id="ag20">–</span><span class="a lbl-avail">available</span></span>
           </div>
         </div>
       </div>
 
       <!-- 40 FT CONTAINER -->
-      <div class="card w40">
-        <h2>40 ft container</h2>
+      <div class="card c40ft">
+        <h2 id="title-40ft">40 ft container</h2>
         <div class="stackbox">
           <div class="tier h2t" id="t40h">
-            <span class="tag">2High</span>
-            <span class="avail"><span class="n" id="a2h40">–</span><span class="a">available</span></span>
+            <span class="tag" id="tag-40h">2High</span>
+            <span class="avail"><span class="n" id="a2h40">–</span><span class="a lbl-avail">available</span></span>
           </div>
           <div class="tier gt" id="t40g">
-            <span class="tag">Ground</span>
-            <span class="avail"><span class="n" id="ag40">–</span><span class="a">available</span></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- SPECIAL CONTAINER INTEGRATED SIDE BY SIDE -->
-      <div class="card wspecial">
-        <h2>Special (Reefer)</h2>
-        <div class="stackbox">
-          <div class="tier" id="tSpec">
-            <span class="tag">Special (Reefer)</span>
-            <span class="avail"><span class="n" id="aSpec">–</span><span class="a">available</span></span>
+            <span class="tag" id="tag-40g">Ground</span>
+            <span class="avail"><span class="n" id="ag40">–</span><span class="a lbl-avail">available</span></span>
           </div>
         </div>
       </div>
@@ -267,6 +311,58 @@ const CONFIG = {
   REFRESH_SECONDS: 60
 };
 
+// BANGLA NUMBER DIGIT MAPPER
+function formatNumber(num) {
+  if (num === null || num === undefined || num === '–') return '–';
+  let str = num.toString();
+  if (currentLang === 'bn') {
+    const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    return str.replace(/\d/g, (digit) => bnDigits[digit]);
+  }
+  return str;
+}
+
+// UPDATED LANGUAGE TRANSLATION DICTIONARY
+const TRANSLATIONS = {
+  en: {
+    title: "Delivery Slot Availability",
+    location: "Chattogram",
+    admin: "Admin",
+    breakdownHeader: "Available Slots Breakdown",
+    c20ft: "20 ft container",
+    c40ft: "40 ft container",
+    twoHigh: "2High",
+    ground: "Ground",
+    available: "available",
+    statusBoth: "Dry Container: Accepting CV (2High and Ground) Booking",
+    status2H: "Dry Container: Accepting CV (2High) Booking",
+    statusGr: "Dry Container: Accepting CV (Ground) Booking",
+    statusNone: "Dry Container: CV Booking Stopped",
+    loading: "Loading latest data…",
+    lastUpdated: "Last updated "
+  },
+  bn: {
+    title: "ডেলিভারি স্লট বুকিং (বর্তমান অবস্থা)",
+    location: "চট্টগ্রাম",
+    admin: "এডমিন",
+    breakdownHeader: "ফাঁকা স্লটের বিবরণ",
+    c20ft: "২০ ফিট কনটেইনার",
+    c40ft: "৪০ ফিট কনটেইনার",
+    twoHigh: "২-হাই (2High)",
+    ground: "গ্রাউন্ড (Ground)",
+    available: "খালি আছে",
+    statusBoth: "ড্রাই কনটেইনার: সিভি (২-হাই এবং গ্রাউন্ড) বুকিং গ্রহণ করা হচ্ছে",
+    status2H: "ড্রাই কনটেইনার: সিভি (২-হাই) বুকিং গ্রহণ করা হচ্ছে",
+    statusGr: "ড্রাই কনটেইনার: সিভি (গ্রাউন্ড) বুকিং গ্রহণ করা হচ্ছে",
+    statusNone: "ড্রাই কনটেইনার: সিভি বুকিং বন্ধ রয়েছে",
+    loading: "সর্বশেষ তথ্য লোড হচ্ছে…",
+    lastUpdated: "সর্বশেষ আপডেট: "
+  }
+};
+
+let currentLang = "en";
+let globalDataRow = null;
+
 if (CONFIG.LOGO_URL) {
   const logoEl = document.getElementById('logo-img');
   logoEl.src = CONFIG.LOGO_URL;
@@ -274,60 +370,82 @@ if (CONFIG.LOGO_URL) {
 
 function updateClock() {
   const now = new Date();
-  document.getElementById('live-clock').textContent = now.toLocaleTimeString();
+  let timeStr = now.toLocaleTimeString();
+  document.getElementById('live-clock').textContent = formatNumber(timeStr);
 }
 updateClock();
 setInterval(updateClock, 1000);
 
 function n(v){ return Math.max(0, parseInt(v,10) || 0); }
 
+// LANGUAGE TOGGLE FUNCTION
+function changeLanguage(lang) {
+  currentLang = lang;
+  const t = TRANSLATIONS[lang];
+
+  document.getElementById('title').textContent = t.title;
+  document.getElementById('location-lbl').textContent = t.location;
+  document.getElementById('admin-btn').textContent = t.admin;
+  document.getElementById('breakdown-header').textContent = t.breakdownHeader;
+  document.getElementById('title-20ft').textContent = t.c20ft;
+  document.getElementById('title-40ft').textContent = t.c40ft;
+  document.getElementById('tag-20h').textContent = t.twoHigh;
+  document.getElementById('tag-20g').textContent = t.ground;
+  document.getElementById('tag-40h').textContent = t.twoHigh;
+  document.getElementById('tag-40g').textContent = t.ground;
+
+  document.querySelectorAll('.lbl-avail').forEach(el => {
+    el.textContent = t.available;
+  });
+
+  updateClock();
+
+  if (globalDataRow) {
+    render(globalDataRow);
+  }
+}
+
 // OPERATIONAL TERMINAL STACKING LOGIC
 function compute(d) {
   const cap = d.cap;
-  const specCap = d.specCap;
   const t20 = d.t20;
   const t40 = d.t40;
   const g20 = d.g20;
   const g40 = d.g40;
-  const spec = d.spec;
 
-  // 1. Effective Ground Slots Consumed (accounting for forced empty ground blocks)
   const slots20 = Math.max(t20, g20);
   const slots40 = Math.max(t40, g40);
   const totalSlotsUsed = slots20 + slots40;
 
-  // 2. Unallocated / Free Ground Capacity
-  const freeSlots = Math.max(0, cap - totalSlotsUsed);
+  const freeSlots = cap - totalSlotsUsed;
 
-  // 3. Available Slots (Free Capacity + Zero-Cost Pairings)
-  const avail20_2H = freeSlots + Math.max(0, g20 - t20);
-  const avail20_Gr = freeSlots + Math.max(0, t20 - g20);
-  const avail40_2H = freeSlots + Math.max(0, g40 - t40);
-  const avail40_Gr = freeSlots + Math.max(0, t40 - g40);
+  // Each category absorbs free capacity (guarded at min 0) + zero-cost pairing opportunities
+  const avail20_2H = Math.max(0, freeSlots) + Math.max(0, g20 - t20);
+  const avail20_Gr = Math.max(0, freeSlots) + Math.max(0, t20 - g20);
+  const avail40_2H = Math.max(0, freeSlots) + Math.max(0, g40 - t40);
+  const avail40_Gr = Math.max(0, freeSlots) + Math.max(0, t40 - g40);
 
   return {
     a2h20: avail20_2H,
     ag20:  avail20_Gr,
     a2h40: avail40_2H,
-    ag40:  avail40_Gr,
-    aSpec: Math.max(0, specCap - spec)
+    ag40:  avail40_Gr
   };
 }
 
 function render(row){
+  globalDataRow = row;
+  const t = TRANSLATIONS[currentLang];
   const d = {
-    cap: n(row.capacity), specCap: n(row.specialCapacity),
-    t20: n(row.t20), t40: n(row.t40), g20: n(row.g20), g40: n(row.g40),
-    spec: n(row.specialBooked)
+    cap: n(row.capacity),
+    t20: n(row.t20), t40: n(row.t40), g20: n(row.g20), g40: n(row.g40)
   };
   const r = compute(d);
   
-  const set = (id,v)=>document.getElementById(id).textContent = v;
+  const set = (id, v) => document.getElementById(id).textContent = formatNumber(v);
   set('a2h20', r.a2h20); set('a2h40', r.a2h40);
   set('ag20', r.ag20);   set('ag40', r.ag40);
-  set('aSpec', r.aSpec);
   
-  // TOGGLE ALERTS (Red when empty, Green when slots are available)
   const toggleAlert = (elId, count) => {
     const el = document.getElementById(elId);
     if (count <= 0) {
@@ -343,40 +461,28 @@ function render(row){
   toggleAlert('t20g', r.ag20);
   toggleAlert('t40h', r.a2h40);
   toggleAlert('t40g', r.ag40);
-  toggleAlert('tSpec', r.aSpec);
   
-  // DRY CONTAINER DYNAMIC BANNER LOGIC
   const generalLabel = document.getElementById('status-general');
   const heightHasSlots = (r.a2h20 + r.a2h40) > 0;
   const groundHasSlots = (r.ag20 + r.ag40) > 0;
   
   if (heightHasSlots && groundHasSlots) {
     generalLabel.className = "status-line green";
-    generalLabel.textContent = "Dry Container: Accepting CV (2High and Ground) Booking";
+    generalLabel.textContent = t.statusBoth;
   } else if (heightHasSlots && !groundHasSlots) {
     generalLabel.className = "status-line green";
-    generalLabel.textContent = "Dry Container: Accepting CV (2High) Booking";
+    generalLabel.textContent = t.status2H;
   } else if (!heightHasSlots && groundHasSlots) {
     generalLabel.className = "status-line green";
-    generalLabel.textContent = "Dry Container: Accepting CV (Ground) Booking";
+    generalLabel.textContent = t.statusGr;
   } else {
     generalLabel.className = "status-line red";
-    generalLabel.textContent = "Dry Container: CV Booking Stopped";
-  }
-  
-  // SPECIAL REEFER CONTAINER EVALUATION LOGIC
-  const specialLabel = document.getElementById('status-special');
-  if (r.aSpec <= 0) {
-    specialLabel.className = "status-line red";
-    specialLabel.textContent = "Special Reefer: Booking Stopped";
-  } else {
-    specialLabel.className = "status-line green";
-    specialLabel.textContent = "Special Reefer: Accepting Bookings";
+    generalLabel.textContent = t.statusNone;
   }
   
   const ts = row.timestamp ? new Date(row.timestamp) : null;
   document.getElementById('updated').textContent =
-    ts ? 'Last updated ' + ts.toLocaleString() : 'Last updated —';
+    ts ? t.lastUpdated + formatNumber(ts.toLocaleString()) : t.lastUpdated + '—';
 }
 
 async function load(){
