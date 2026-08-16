@@ -126,6 +126,31 @@
   .sub { font-size: 12px; color: var(--steel); }
   .err { background: #fee2e2; color: #dc2626; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; display: none; margin-bottom: 10px; border: 1px solid #dc2626; }
 
+  /* TOGGLE VIEW CONTROLS */
+  .view-toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+  .btn-toggle {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+    border: 1px solid var(--light-blue);
+    background-color: var(--light-blue);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-family: inherit;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .btn-toggle:hover {
+    background-color: #0082b3;
+    border-color: #0082b3;
+  }
+
   /* BREAKDOWN HEADER LABEL */
   .breakdown-header {
     font-size: 15px;
@@ -267,6 +292,13 @@
 
     <div class="err" id="err"></div>
 
+    <!-- VIEW TOGGLE BUTTON -->
+    <div class="view-toggle-container">
+      <button id="toggle-view-btn" type="button" onclick="toggleSlotView()" class="btn-toggle">
+        <span id="toggle-label">Show: Booked Slots</span>
+      </button>
+    </div>
+
     <!-- VISUAL BREAKDOWN SECTION LABEL -->
     <div class="breakdown-header" id="breakdown-header">Available Slots Breakdown</div>
 
@@ -311,6 +343,11 @@ const CONFIG = {
   REFRESH_SECONDS: 60
 };
 
+// GLOBAL STATE
+let currentLang = "en";
+let currentView = "avail"; // 'avail' or 'booked'
+let globalDataRow = null;
+
 // BANGLA NUMBER DIGIT MAPPER
 function formatNumber(num) {
   if (num === null || num === undefined || num === '–') return '–';
@@ -328,12 +365,16 @@ const TRANSLATIONS = {
     title: "Delivery Slot Availability",
     location: "Chattogram",
     admin: "Admin",
-    breakdownHeader: "Available Slots Breakdown",
+    breakdownHeaderAvail: "Available Slots Breakdown",
+    breakdownHeaderBooked: "Booked Slots Breakdown",
     c20ft: "20 ft container",
     c40ft: "40 ft container",
     twoHigh: "2High",
     ground: "Ground",
     available: "available",
+    booked: "booked",
+    btnShowBooked: "Show: Booked Slots",
+    btnShowAvail: "Show: Available Slots",
     statusBoth: "Dry Container: Accepting CV (2High and Ground) Booking",
     status2H: "Dry Container: Accepting CV (2High) Booking",
     statusGr: "Dry Container: Accepting CV (Ground) Booking",
@@ -345,23 +386,24 @@ const TRANSLATIONS = {
     title: "ডেলিভারি স্লট বুকিং (বর্তমান অবস্থা)",
     location: "চট্টগ্রাম",
     admin: "এডমিন",
-    breakdownHeader: "ফাঁকা স্লটের বিবরণ",
+    breakdownHeaderAvail: "ফাঁকা স্লটের বিবরণ",
+    breakdownHeaderBooked: "বুকড করা স্লটের বিবরণ",
     c20ft: "২০ ফিট কনটেইনার",
     c40ft: "৪০ ফিট কনটেইনার",
     twoHigh: "২-হাই (2High)",
     ground: "গ্রাউন্ড (Ground)",
     available: "খালি আছে",
+    booked: "বুক করা হয়েছে",
+    btnShowBooked: "দেখান: বুকড স্লট",
+    btnShowAvail: "দেখান: ফাঁকা স্লট",
     statusBoth: "ড্রাই কনটেইনার: সিভি (২-হাই এবং গ্রাউন্ড) বুকিং গ্রহণ করা হচ্ছে",
     status2H: "ড্রাই কনটেইনার: সিভি (২-হাই) বুকিং গ্রহণ করা হচ্ছে",
     statusGr: "ড্রাই কনটেইনার: সিভি (গ্রাউন্ড) বুকিং গ্রহণ করা হচ্ছে",
-    statusNone: "ড্রাই কনটেইনার: সিভি বুকিং বন্ধ রয়েছে",
+    statusNone: "ড্রাই কনটেইনার: সিভি বুকিং বন্ধ রয়েছে",
     loading: "সর্বশেষ তথ্য লোড হচ্ছে…",
     lastUpdated: "সর্বশেষ আপডেট: "
   }
 };
-
-let currentLang = "en";
-let globalDataRow = null;
 
 if (CONFIG.LOGO_URL) {
   const logoEl = document.getElementById('logo-img');
@@ -378,26 +420,17 @@ setInterval(updateClock, 1000);
 
 function n(v){ return Math.max(0, parseInt(v,10) || 0); }
 
+// TOGGLE VIEW FUNCTION
+function toggleSlotView() {
+  currentView = (currentView === 'avail') ? 'booked' : 'avail';
+  if (globalDataRow) {
+    render(globalDataRow);
+  }
+}
+
 // LANGUAGE TOGGLE FUNCTION
 function changeLanguage(lang) {
   currentLang = lang;
-  const t = TRANSLATIONS[lang];
-
-  document.getElementById('title').textContent = t.title;
-  document.getElementById('location-lbl').textContent = t.location;
-  document.getElementById('admin-btn').textContent = t.admin;
-  document.getElementById('breakdown-header').textContent = t.breakdownHeader;
-  document.getElementById('title-20ft').textContent = t.c20ft;
-  document.getElementById('title-40ft').textContent = t.c40ft;
-  document.getElementById('tag-20h').textContent = t.twoHigh;
-  document.getElementById('tag-20g').textContent = t.ground;
-  document.getElementById('tag-40h').textContent = t.twoHigh;
-  document.getElementById('tag-40g').textContent = t.ground;
-
-  document.querySelectorAll('.lbl-avail').forEach(el => {
-    el.textContent = t.available;
-  });
-
   updateClock();
 
   if (globalDataRow) {
@@ -436,15 +469,45 @@ function compute(d) {
 function render(row){
   globalDataRow = row;
   const t = TRANSLATIONS[currentLang];
+  
+  // Header static translations
+  document.getElementById('title').textContent = t.title;
+  document.getElementById('location-lbl').textContent = t.location;
+  document.getElementById('admin-btn').textContent = t.admin;
+  document.getElementById('title-20ft').textContent = t.c20ft;
+  document.getElementById('title-40ft').textContent = t.c40ft;
+  document.getElementById('tag-20h').textContent = t.twoHigh;
+  document.getElementById('tag-20g').textContent = t.ground;
+  document.getElementById('tag-40h').textContent = t.twoHigh;
+  document.getElementById('tag-40g').textContent = t.ground;
+
+  // Toggle button text & section header update
+  document.getElementById('toggle-label').textContent = (currentView === 'avail') ? t.btnShowBooked : t.btnShowAvail;
+  document.getElementById('breakdown-header').textContent = (currentView === 'avail') ? t.breakdownHeaderAvail : t.breakdownHeaderBooked;
+
+  document.querySelectorAll('.lbl-avail').forEach(el => {
+    el.textContent = (currentView === 'avail') ? t.available : t.booked;
+  });
+
   const d = {
     cap: n(row.capacity),
     t20: n(row.t20), t40: n(row.t40), g20: n(row.g20), g40: n(row.g40)
   };
   const r = compute(d);
   
+  // Display numbers based on active mode
+  const displayValues = {
+    a2h20: (currentView === 'avail') ? r.a2h20 : d.t20,
+    ag20:  (currentView === 'avail') ? r.ag20  : d.g20,
+    a2h40: (currentView === 'avail') ? r.a2h40 : d.t40,
+    ag40:  (currentView === 'avail') ? r.ag40  : d.g40
+  };
+
   const set = (id, v) => document.getElementById(id).textContent = formatNumber(v);
-  set('a2h20', r.a2h20); set('a2h40', r.a2h40);
-  set('ag20', r.ag20);   set('ag40', r.ag40);
+  set('a2h20', displayValues.a2h20); 
+  set('a2h40', displayValues.a2h40);
+  set('ag20',  displayValues.ag20);  
+  set('ag40',  displayValues.ag40);
   
   const toggleAlert = (elId, count) => {
     const el = document.getElementById(elId);
