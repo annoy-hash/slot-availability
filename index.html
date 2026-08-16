@@ -509,13 +509,22 @@ function render(row){
   set('ag20',  displayValues.ag20);  
   set('ag40',  displayValues.ag40);
   
-  const toggleAlert = (elId, count) => {
+  // Swapped visual logic: Original colors for Booked, Green for Available
+  const toggleAlert = (elId, availCount) => {
     const el = document.getElementById(elId);
-    if (count <= 0) {
-      el.classList.add('out-of-slots');
-      el.classList.remove('slots-available');
+    
+    if (currentView === 'avail') {
+      // In Available View: Turn Green if slots exist, Red if empty
+      if (availCount > 0) {
+        el.classList.add('slots-available'); // Applies Green background
+        el.classList.remove('out-of-slots');
+      } else {
+        el.classList.add('out-of-slots');    // Applies Red alert
+        el.classList.remove('slots-available');
+      }
     } else {
-      el.classList.add('slots-available');
+      // In Booked View: Reset to original CSS theme (Amber/Teal)
+      el.classList.remove('slots-available');
       el.classList.remove('out-of-slots');
     }
   };
