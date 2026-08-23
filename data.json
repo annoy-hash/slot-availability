@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-08-23T07:08:58.500Z",
+  "timestamp": "2026-08-23T07:59:53.288Z",
   "capacity": 80,
   "specialCapacity": 10,
   "t20": 1,
-  "t40": 1,
+  "t40": 2,
   "g20": 1,
   "g40": 1,
   "specialBooked": 0,
