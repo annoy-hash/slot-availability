@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-10-05T09:58:57.375Z",
+  "timestamp": "2026-10-05T10:48:43.947Z",
   "capacity": 80,
   "specialCapacity": 10,
-  "t20": 8,
-  "t40": 49,
-  "g20": 14,
-  "g40": 17,
+  "t20": 9,
+  "t40": 51,
+  "g20": 15,
+  "g40": 21,
   "specialBooked": 0,
   "updatedBy": "Power Automate"
 }
